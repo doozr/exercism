@@ -19,6 +19,11 @@ func isShouting(s string) (shouting bool) {
 	return hasLetters
 }
 
+func isQuestion(s string) (question bool) {
+	question = strings.HasSuffix(s, "?")
+	return
+}
+
 // Hey handles Bob's responss to input strings.
 func Hey(s string) (response string) {
 	s = strings.TrimSpace(s)
@@ -27,7 +32,7 @@ func Hey(s string) (response string) {
 		response = "Fine. Be that way!"
 	case isShouting(s):
 		response = "Whoa, chill out!"
-	case strings.HasSuffix(s, "?"):
+	case isQuestion(s):
 		response = "Sure."
 	default:
 		response = "Whatever."
