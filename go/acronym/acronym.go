@@ -1,3 +1,4 @@
+// Package acronym provides functions for generating acronyms.
 package acronym
 
 import "unicode"
