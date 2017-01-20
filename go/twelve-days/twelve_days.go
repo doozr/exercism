@@ -38,23 +38,22 @@ var days = []string{
 	"twelfth",
 }
 
-func getGifts(day int) []string {
+func getGifts(day int) string {
 	if day == 1 {
-		return []string{gifts[0]}
+		return gifts[0]
 	}
-	giftsGiven := make([]string, day, day)
-	giftsGiven[day-1] = "and " + gifts[0]
-	for ix := 0; ix < day-1; ix++ {
-		giftsGiven[ix] = gifts[day-1-ix]
+	giftsGiven := make([]string, day-1, day-1)
+	for ix := 1; ix < day; ix++ {
+		giftsGiven[ix-1] = gifts[day-ix]
 	}
-	return giftsGiven
+	return strings.Join(giftsGiven, ", ") + ", and " + gifts[0]
 }
 
 // Verse gets the verse associated with the given day number
 func Verse(day int) (verse string) {
 	dayOrdinal := days[day-1]
 	giftsGiven := getGifts(day)
-	verse = fmt.Sprintf("On the %s day of Christmas my true love gave to me, %s.", dayOrdinal, strings.Join(giftsGiven, ", "))
+	verse = fmt.Sprintf("On the %s day of Christmas my true love gave to me, %s.", dayOrdinal, giftsGiven)
 	return
 }
 
