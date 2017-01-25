@@ -30,9 +30,7 @@ func (a *Account) Close() (payout int64, ok bool) {
 	}
 
 	a.closed = true
-	payout = a.balance
-	ok = true
-	return
+	return a.balance, true
 }
 
 // Balance of the account
@@ -44,9 +42,7 @@ func (a *Account) Balance() (balance int64, ok bool) {
 		return
 	}
 
-	ok = true
-	balance = a.balance
-	return
+	return a.balance, true
 }
 
 // Deposit or withdraw from the account
@@ -62,8 +58,6 @@ func (a *Account) Deposit(amount int64) (newBalance int64, ok bool) {
 		return
 	}
 
-	ok = true
 	a.balance += amount
-	newBalance = a.balance
-	return
+	return a.balance, true
 }
