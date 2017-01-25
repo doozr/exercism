@@ -99,20 +99,15 @@ func Sum(num int) (triplets []Triplet) {
 
 // Range returns all triplets with sides in the given range
 func Range(min, max int) (triplets []Triplet) {
-	tripletSet := make(map[Triplet]bool)
+	triplets = make([]Triplet, 0)
 	predicate := func(triplet Triplet) bool {
 		return triplet.allSidesAtMost(max)
 	}
 
 	for _, triplet := range mn(predicate) {
 		if triplet.allSidesAtLeast(min) {
-			tripletSet[triplet] = true
+			triplets = append(triplets, triplet)
 		}
-	}
-
-	triplets = make([]Triplet, 0)
-	for k := range tripletSet {
-		triplets = append(triplets, k)
 	}
 
 	sort.Sort(TripletSorter(triplets))
