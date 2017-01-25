@@ -46,6 +46,7 @@ var sumTests = []struct {
 	sum int
 	ts  []Triplet
 }{
+	{90, []Triplet{{9, 40, 41}, {15, 36, 39}}},
 	{180, []Triplet{{18, 80, 82}, {30, 72, 78}, {45, 60, 75}}},
 	{1000, []Triplet{{200, 375, 425}}},
 }

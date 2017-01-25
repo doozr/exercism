@@ -19,10 +19,12 @@ func (t Triplet) multiply(x int) Triplet {
 	return newTriplet(t[0]*x, t[1]*x, t[2]*x)
 }
 
-func (t Triplet) withinBounds(min, max int) bool {
-	return t[0] >= min && t[0] <= max &&
-		t[1] >= min && t[1] <= max &&
-		t[2] >= min && t[2] <= max
+func (t Triplet) allSidesAtMost(max int) bool {
+	return t[0] <= max && t[1] <= max && t[2] <= max
+}
+
+func (t Triplet) allSidesAtLeast(min int) bool {
+	return t[0] >= min && t[1] >= min && t[2] >= min
 }
 
 // TripletSorter allows lexicographic sorting of Triples
@@ -40,23 +42,35 @@ func (ts TripletSorter) Less(i, j int) bool {
 	return ts[i][0] < ts[j][0]
 }
 
-func mn(limit int) (triplets []Triplet) {
+// TripletPredicate determines if a triplet matches a condition
+type TripletPredicate func(Triplet) bool
+
+func mn(limit TripletPredicate) (triplets []Triplet) {
 	triplets = make([]Triplet, 0)
-	for m := 1; m < limit; m++ {
+	for m := 1; ; m++ {
 		for n := 1; n < m; n++ {
 			a := (m * m) - (n * n)
 			b := 2 * m * n
 			c := (m * m) + (n * n)
+			triplet := newTriplet(a, b, c)
+
+			if !limit(triplet) {
+				return
+			}
+
 			triplets = append(triplets, newTriplet(a, b, c))
 		}
 	}
-	return
 }
 
 // Sum returns all triplets with a given perimeter
 func Sum(num int) (triplets []Triplet) {
 	tripletSet := make(map[Triplet]bool)
-	for _, triplet := range mn(num / 2) {
+	predicate := func(triplet Triplet) bool {
+		return triplet.sum() <= num
+	}
+
+	for _, triplet := range mn(predicate) {
 		total := triplet.sum()
 
 		if total == num {
@@ -86,8 +100,12 @@ func Sum(num int) (triplets []Triplet) {
 // Range returns all triplets with sides in the given range
 func Range(min, max int) (triplets []Triplet) {
 	tripletSet := make(map[Triplet]bool)
-	for _, triplet := range mn(max / 2) {
-		if triplet.withinBounds(min, max) {
+	predicate := func(triplet Triplet) bool {
+		return triplet.allSidesAtMost(max)
+	}
+
+	for _, triplet := range mn(predicate) {
+		if triplet.allSidesAtLeast(min) {
 			tripletSet[triplet] = true
 		}
 	}
