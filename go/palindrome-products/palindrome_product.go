@@ -1,31 +1,36 @@
 // Package palindrome calculates palindrome products
 package palindrome
 
-import (
-	"fmt"
-	"strconv"
-)
+import "fmt"
 
 var testVersion = 1
 
+// Product represents a product and its factorisations
 type Product struct {
 	Product        int      // palindromic, of course
 	Factorizations [][2]int //list of all possible two-factor factorizations of Product, within given limits, in order
 }
 
 func isPalindrome(i int) bool {
-	s := strconv.Itoa(i)
-	length := len(s)
-	halfway := length / 2
-	end := length - 1
-	for ix := 0; ix <= halfway; ix++ {
-		if s[ix] != s[end-ix] {
-			return false
-		}
+	if i%10 == 0 {
+		// If the number ends with 0 it can't be palindromic
+		return false
 	}
-	return true
+
+	// Incrementally pop digits from n and push onto r
+	n := i
+	r := 0
+	for n > 0 {
+		d := n % 10
+		r = r*10 + d
+		n = n / 10
+	}
+
+	// If the reversed number equals the original, this is palandromic
+	return i == r
 }
 
+// Products returns various products that are palindromic
 func Products(fmin, fmax int) (pmin, pmax Product, err error) {
 	if fmin > fmax {
 		err = fmt.Errorf("fmin > fmax...")
@@ -33,7 +38,7 @@ func Products(fmin, fmax int) (pmin, pmax Product, err error) {
 	}
 
 	var min, max int
-	factors := make(map[int][][2]int)
+	factorisations := make(map[int][][2]int)
 
 	for x := fmin; x <= fmax; x++ {
 		for y := x; y <= fmax; y++ {
@@ -52,11 +57,11 @@ func Products(fmin, fmax int) (pmin, pmax Product, err error) {
 			}
 
 			if product == min || product == max {
-				fs, ok := factors[product]
+				fs, ok := factorisations[product]
 				if !ok {
 					fs = make([][2]int, 0)
 				}
-				factors[product] = append(fs, [2]int{x, y})
+				factorisations[product] = append(fs, [2]int{x, y})
 			}
 		}
 	}
@@ -65,7 +70,7 @@ func Products(fmin, fmax int) (pmin, pmax Product, err error) {
 		err = fmt.Errorf("No palindromes...")
 	}
 
-	pmin = Product{Product: min, Factorizations: factors[min]}
-	pmax = Product{Product: max, Factorizations: factors[max]}
+	pmin = Product{Product: min, Factorizations: factorisations[min]}
+	pmax = Product{Product: max, Factorizations: factorisations[max]}
 	return
 }
