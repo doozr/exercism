@@ -10,7 +10,7 @@ func Sieve(limit int) []int {
 			continue
 		}
 		primes = append(primes, x)
-		for y := x * 2; y <= limit; y += x {
+		for y := x * x; y <= limit; y += x {
 			marked[y] = true
 		}
 	}
