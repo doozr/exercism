@@ -16,7 +16,7 @@ func Bracket(s string) (bool, error) {
 			stack = append(stack, ')')
 		default:
 			end := len(stack) - 1
-			if len(stack) == 0 || r != stack[end] {
+			if end == -1 || r != stack[end] {
 				return false, nil
 			}
 
