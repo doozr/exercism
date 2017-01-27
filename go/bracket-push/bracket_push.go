@@ -15,17 +15,12 @@ func Bracket(s string) (bool, error) {
 		case '(':
 			stack = append(stack, ')')
 		default:
-			if len(stack) == 0 {
-				return false, nil
-			}
-
 			end := len(stack) - 1
-			p := stack[end]
-			stack = stack[0:end]
-
-			if r != p {
+			if len(stack) == 0 || r != stack[end] {
 				return false, nil
 			}
+
+			stack = stack[0:end]
 		}
 	}
 	return len(stack) == 0, nil
