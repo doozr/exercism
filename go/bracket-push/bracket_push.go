@@ -2,33 +2,28 @@ package brackets
 
 var testVersion = 4
 
+// Bracket checks that all brackets are matched
 func Bracket(s string) (bool, error) {
 	stack := make([]rune, 0)
-
-	push := func(r rune) {
-		stack = append(stack, r)
-	}
-
-	pop := func() (r rune) {
-		if len(stack) == 0 {
-			return
-		}
-		end := len(stack) - 1
-		r = stack[end]
-		stack = stack[0:end]
-		return
-	}
 
 	for _, r := range s {
 		switch r {
 		case '{':
-			push('}')
+			stack = append(stack, '}')
 		case '[':
-			push(']')
+			stack = append(stack, ']')
 		case '(':
-			push(')')
+			stack = append(stack, ')')
 		default:
-			if r != pop() {
+			if len(stack) == 0 {
+				return false, nil
+			}
+
+			end := len(stack) - 1
+			p := stack[end]
+			stack = stack[0:end]
+
+			if r != p {
 				return false, nil
 			}
 		}
