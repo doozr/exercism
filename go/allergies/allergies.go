@@ -15,10 +15,19 @@ var testedAllergies = map[string]uint{
 	"cats":         7,
 }
 
+// isAllergic extracts the common test logic for performance reasons
+//
+// Simply calling AllergicTo() from Allergies() adds 50% to the execution time
+// due to the extra test for existence of the key, even though we know the
+// key is there and what the bit number is.
+func isAllergic(score, bit uint) bool {
+	return score>>bit&1 == 1
+}
+
 // Allergies returns a list of allergies based on a score
 func Allergies(score uint) (result []string) {
 	for allergen, bit := range testedAllergies {
-		if score>>bit&1 == 1 {
+		if isAllergic(score, bit) {
 			result = append(result, allergen)
 		}
 	}
@@ -26,9 +35,9 @@ func Allergies(score uint) (result []string) {
 }
 
 // AllergicTo returns true if the specified allergy was found
-func AllergicTo(score uint, allergen string) bool {
+func AllergicTo(score uint, allergen string) (result bool) {
 	if bit, ok := testedAllergies[allergen]; ok {
-		return score>>bit&1 == 1
+		result = isAllergic(score, bit)
 	}
-	return false
+	return
 }
