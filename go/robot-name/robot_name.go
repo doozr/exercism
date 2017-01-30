@@ -1,48 +1,53 @@
 // Package robotname names robots
 package robotname
 
-import "crypto/rand"
+import "math/rand"
 
-var names = map[string]bool{}
+var names = []string{}
 
 // Robot with a name
 type Robot struct {
 	name string
 }
 
-// These generator functions are horrible. They skew the probability by
-// the simple fact that max(byte) is not divisible by either 26 or 10.
-// But frankly it doesn't matter because even distribution of characters
-// is not a requirement.
-
-func toLetter(b byte) rune {
-	return rune(b%26 + 'A')
+// generateAllNames generates every possible name and shuffles the list
+func generateAllNames() {
+	for a := 'A'; a <= 'Z'; a++ {
+		for b := 'A'; b <= 'Z'; b++ {
+			for c := '0'; c <= '9'; c++ {
+				for d := '0'; d <= '9'; d++ {
+					for e := '0'; e <= '9'; e++ {
+						runes := []rune{a, b, c, d, e}
+						names = append(names, string(runes))
+					}
+				}
+			}
+		}
+	}
+	for i := range names {
+		j := rand.Intn(len(names))
+		names[i], names[j] = names[j], names[i]
+	}
 }
 
-func toDigit(b byte) rune {
-	return rune(b%10 + '0')
-}
-
-// generateName randomly generates a name using cryptorand
-// guaranteed random, not guaranteed unique
+// generateName randomly generates a name using rand.
+// Not guaranteed random, not guaranteed unique.
 //
 // To be able to use something like UUIDv4 for generating
 // unique names without a lookup table we need a bit more
 // entropy than 5 chars in a fixed format.
+//
+// Instead we generate every possible name, shuffle the list,
+// then take them in order.
+//
+// 329ms to generate the list, but 485ns for every allocation
+// after that. Worth the initial time, I think.
 func generateName() (name string) {
-	for name == "" || names[name] {
-		bytes := make([]byte, 5)
-		runes := make([]rune, 5)
-		rand.Read(bytes)
-
-		runes[0] = toLetter(bytes[0])
-		runes[1] = toLetter(bytes[1])
-		runes[2] = toDigit(bytes[2])
-		runes[3] = toDigit(bytes[3])
-		runes[4] = toDigit(bytes[4])
-		name = string(runes)
+	if len(names) == 0 {
+		generateAllNames()
 	}
-	names[name] = true
+	name = names[0]
+	names = names[1:]
 	return
 }
 

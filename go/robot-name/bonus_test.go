@@ -9,7 +9,7 @@ func TestCollisions(t *testing.T) {
 	// Test uniqueness for new robots.
 	// 10k should be plenty to catch names generated
 	// randomly without a uniqueness check.
-	for i := 0; i < 1000000; i++ {
+	for i := 0; i < 338000; i++ {
 		n := New().Name()
 		if m[n] {
 			t.Fatalf("Name %s reissued after %d robots.", n, i)
@@ -18,7 +18,7 @@ func TestCollisions(t *testing.T) {
 	}
 	// Test that names aren't recycled either.
 	r := New()
-	for i := 0; i < 1000000; i++ {
+	for i := 0; i < 338000; i++ {
 		r.Reset()
 		n := r.Name()
 		if m[n] {

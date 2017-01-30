@@ -49,3 +49,11 @@ func BenchmarkName(b *testing.B) {
 		New().Name()
 	}
 }
+
+func BenchmarkFirstName(b *testing.B) {
+	// Benchmark combined time to create robot and name.
+	for i := 0; i < b.N; i++ {
+		names = []string{}
+		New().Name()
+	}
+}
