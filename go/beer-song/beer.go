@@ -37,6 +37,7 @@ func secondLine(n int) (line string) {
 	return
 }
 
+// Verse of the song
 func Verse(n int) (verse string, err error) {
 	if n > 99 || n < 0 {
 		err = fmt.Errorf("Verse must be between 0 and 99")
@@ -46,6 +47,7 @@ func Verse(n int) (verse string, err error) {
 	return
 }
 
+// Verses in range s to e, in descending order
 func Verses(s, e int) (verses string, err error) {
 	if s < e {
 		err = fmt.Errorf("Start must be greater than end")
@@ -66,6 +68,7 @@ func Verses(s, e int) (verses string, err error) {
 	return
 }
 
+// Song in its entirety
 func Song() (song string) {
 	song, _ = Verses(99, 0)
 	return
