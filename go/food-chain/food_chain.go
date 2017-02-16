@@ -26,9 +26,12 @@ var foodChain = []FoodChain{
 }
 
 // Verse returns one verse
-func Verse(num int) string {
+func Verse(num int) (verse string) {
+	// Switch to 0 based indexing for the actual verse array
+	num--
+
 	var lines []string
-	food := foodChain[num-1]
+	food := foodChain[num]
 
 	lines = append(lines, fmt.Sprintf("I know an old lady who swallowed a %s.", food.name))
 
@@ -36,25 +39,29 @@ func Verse(num int) string {
 		lines = append(lines, food.commentary)
 	}
 
-	if num < len(foodChain) {
-		for l := num - 2; l >= 0; l-- {
-			food = foodChain[l+1]
-			prevFood := foodChain[l]
-
-			var description = ""
-			if prevFood.description != "" {
-				description = " " + prevFood.description
-			}
-
-			line := fmt.Sprintf("She swallowed the %s to catch the %s%s.", food.name, prevFood.name, description)
-			lines = append(lines, line)
-		}
-
-		lines = append(lines, "I don't know why she swallowed the fly. Perhaps she'll die.")
+	isLastVerse := num >= len(foodChain)-1
+	if isLastVerse {
+		verse = strings.Join(lines, "\n")
+		return
 	}
 
-	verse := strings.Join(lines, "\n")
-	return verse
+	for l := num; l > 0; l-- {
+		food = foodChain[l]
+		prevFood := foodChain[l-1]
+
+		var description = ""
+		if prevFood.description != "" {
+			description = " " + prevFood.description
+		}
+
+		line := fmt.Sprintf("She swallowed the %s to catch the %s%s.", food.name, prevFood.name, description)
+		lines = append(lines, line)
+	}
+
+	lines = append(lines, "I don't know why she swallowed the fly. Perhaps she'll die.")
+
+	verse = strings.Join(lines, "\n")
+	return
 }
 
 // Verses returns a range of verses
