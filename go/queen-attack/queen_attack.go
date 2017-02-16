@@ -21,7 +21,7 @@ func parsePosition(p string) (column, row int, err error) {
 	// Super-optimised ASCII hack for single digit Atoi
 	row = int(p[1] - '0')
 	if row < 1 || row > 8 {
-		err = fmt.Errorf("Row must be 0-9")
+		err = fmt.Errorf("Row must be 1-8")
 		return
 	}
 
